@@ -1,17 +1,7 @@
-import { useEffect, useState } from "react";
-import http from "./services/api"
+import Movie from "./component/Movie";
 
 function App() {
-  const [data, setData] = useState();
-  useEffect(() => {
-    const fetchData = async () => {
-      const resp = await http.get();
-      setData(resp);
-    }  
-    
-    fetchData();
-  } , [])
-  return <>{JSON.stringify(data)}</>;
+  return <><Movie /></>;
 }
 
 export default App;
