@@ -1,26 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const cors = require('cors')
 const app = express();
-const cors = require('cors');
 const port = 5500;
 
-// Configuring CORS options
-const corsOptions = {
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-// Apply CORS middleware
-app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-  setTimeout(() => {
-    next();
-  }, 3000);
-});
-
+app.use(cors());
 app.use(bodyParser.json());
 
 const getMovies = () => {
@@ -32,11 +17,24 @@ const saveMovies = (movies) => {
   fs.writeFileSync("movies.json", JSON.stringify(movies, null, 2));
 };
 
+// Get all movies
 app.get("/movies", (req, res) => {
   const movies = getMovies();
   res.json(movies);
 });
 
+// Get a specific movie by ID
+app.get("/movies/:id", (req, res) => {
+  const movies = getMovies();
+  const movie = movies.find((m) => m.id === parseInt(req.params.id));
+  if (movie) {
+    res.json(movie);
+  } else {
+    res.status(404).json({ message: "Movie not found" });
+  }
+});
+
+// Add a new movie
 app.post("/movies", (req, res) => {
   const movies = getMovies();
   const newMovie = req.body;
@@ -46,6 +44,7 @@ app.post("/movies", (req, res) => {
   res.status(201).json(newMovie);
 });
 
+// Update an existing movie by ID
 app.put("/movies/:id", (req, res) => {
   const movies = getMovies();
   const movieIndex = movies.findIndex((m) => m.id === parseInt(req.params.id));
@@ -59,6 +58,7 @@ app.put("/movies/:id", (req, res) => {
   }
 });
 
+// Delete a movie by ID
 app.delete("/movies/:id", (req, res) => {
   let movies = getMovies();
   const movieIndex = movies.findIndex((m) => m.id === parseInt(req.params.id));

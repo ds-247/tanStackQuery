@@ -1,23 +1,34 @@
-import { useGetMovies } from "../services/queries";
+import { useGetMovies, useMultipleMoviesMitId } from "../services/queries";
 
 function Movie() {
-  const getMovieQuery = useGetMovies();
+  const getMoviesQuery = useGetMovies();
 
-  if (getMovieQuery.isPending) return "Loading";
-  if (getMovieQuery.isError) return "Error occured";
+  const movieIds = getMoviesQuery.data?.map((e) => e.id) || [];
+  const getMovieQueryResults = useMultipleMoviesMitId(movieIds);
 
-  console.log(getMovieQuery.data);
+  if (getMoviesQuery.isLoading) return "Loading...";
+  if (getMoviesQuery.isError) return "Error occurred";
+
+  // Check if all movie queries are still loading or have errors
+  if (getMovieQueryResults.some((query) => query.isLoading))
+    return "Loading movies...";
+  if (getMovieQueryResults.some((query) => query.isError))
+    return "Error loading some movies";
 
   return (
     <>
-      {getMovieQuery.data.data.map((e) => {
-        console.log(e);
+      {getMovieQueryResults.map((result, index) => {
+        if (result.isLoading) return <p key={index}>Loading...</p>;
+        if (result.isError) return <p key={index}>Error loading movie</p>;
+
+        const movie = result.data;
         return (
-          <>
-            <h1>{e.title}</h1>
-            <h4>{e.id}</h4>
-            <h4>{e.director}</h4>
-          </>
+          <div key={movie.id}>
+            <h1>{movie.title}</h1>
+            <h4>ID: {movie.id}</h4>
+            <h4>Director: {movie.director}</h4>
+            <h4>Year: {movie.year}</h4>
+          </div>
         );
       })}
     </>
