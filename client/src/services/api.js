@@ -20,13 +20,8 @@ async function fetchMovie(id) {
 
 async function createMovie(movie) {
   try {
-    const res = await axios.post(`http://localhost:5500/movies`, {
-      title: movie.title,
-      year: movie.year,
-      director: movie.director,
-    });
-    console.log(data);
-    return res;
+    const res = await axios.post(`http://localhost:5500/movies`, movie);
+    return res.data;
   } catch (error) {
     throw new Error("Error fetching movie");
   }
