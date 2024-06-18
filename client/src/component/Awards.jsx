@@ -4,7 +4,7 @@ import { useAwardsQuery } from "../services/queries";
 export default function Awards() {
   const [page, setPage] = useState(1);
 
-  const {  isPending, error, isError, isFetching, data } = useAwardsQuery(page);
+  const {  isPending, error, isError, isFetching, data, isPlaceholderData } = useAwardsQuery(page);
   console.log(data);
 
   if (isError) return <> Error Fetching Data</>;
@@ -31,7 +31,12 @@ export default function Awards() {
         prev
       </button>
       current page  :  {page}
-      <button onClick={() => setPage((prev) => prev + 1)}>next</button>
+      <button onClick={() => {
+        if(!isPlaceholderData){
+            setPage((prev) => prev + 1);
+        }
+      }}
+      disabled={isPlaceholderData} >next</button>
       <br/>
       {isFetching ? "fetching " : "not fetching "}
     </>
