@@ -1,4 +1,5 @@
 import Movie from "./component/Movie";
+import Awards from "./component/Awards";
 import { useIsFetching } from "@tanstack/react-query";
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
   return (
     <>
       <h3>Global active queries {isFetching}</h3>
-      <Movie />
+      {/* <Movie /> */}
+      <Awards />
     </>
   );
 }

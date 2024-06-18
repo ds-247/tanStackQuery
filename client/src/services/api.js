@@ -27,10 +27,34 @@ async function createMovie(movie) {
   }
 }
 
+async function getAwards(page ) {
+  try {
+    const limit = 3;
+    let url = "http://localhost:5500/awards";
+    if (!page) {
+      const res = await axios.get("http://localhost:5500/awards");
+
+      return res.data;
+    } else {
+      const res = await axios.get(url, {
+        params: {
+          _limit: limit,
+          _page: page,
+        },
+      });
+
+      return res.data;
+    }
+  } catch (error) {
+    throw new Error("Error fetching awards .... ");
+  }
+}
+
 const http = {
   get: fetchMovies,
   getSpecific: fetchMovie,
   create: createMovie,
+  getAwards: getAwards,
 };
 
 export default http;

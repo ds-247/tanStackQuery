@@ -1,5 +1,16 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
 import http from "./api";
+
+
+// get awards query
+
+export function useAwardsQuery(page){
+  return useQuery({
+    queryKey: ["awards", {page}],
+    queryFn: () => http.getAwards(page),
+    placeholderData : keepPreviousData
+  })
+}
 
 // get movies query
 
