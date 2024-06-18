@@ -27,7 +27,7 @@ async function createMovie(movie) {
   }
 }
 
-async function getAwards(page ) {
+async function getAwards(page) {
   try {
     const limit = 3;
     let url = "http://localhost:5500/awards";
@@ -50,11 +50,28 @@ async function getAwards(page ) {
   }
 }
 
+async function getCelebs({ pageParam = 1 }) {
+  try {
+    const limit = 5;
+    const url = "http://localhost:5500/celebs";
+    const res = await axios.get(url, {
+      params: {
+        _limit: limit,
+        _page: pageParam,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    throw new Error("Error fetching celebs list .... ");
+  }
+}
+
 const http = {
   get: fetchMovies,
   getSpecific: fetchMovie,
   create: createMovie,
   getAwards: getAwards,
+  getCelebs : getCelebs
 };
 
 export default http;

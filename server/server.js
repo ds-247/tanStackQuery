@@ -24,6 +24,7 @@ const readData = (file) => {
 
 let movies = readData("movies.json");
 let awards = readData("awards.json");
+let celebs = readData("celebs.json");
 
 const saveMovies = (movies) => {
   fs.writeFileSync("movies.json", JSON.stringify(movies, null, 2));
@@ -92,6 +93,21 @@ app.get("/awards", (req, res) => {
     res.json(awards);
   }
 });
+
+app.get("/celebs", (req, res) => {
+  let { _limit , _page } = req.query;
+  _limit = parseInt(_limit);
+  _page = parseInt(_page);
+
+  if(_limit && _page){
+    const start = (_page  - 1) * _limit;
+    const end = _page * _limit;
+    const paginatedCelebs = celebs.slice(start, end);
+    res.json(paginatedCelebs);
+  } else{
+    res.json(celebs);
+  }
+})
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

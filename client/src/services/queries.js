@@ -1,6 +1,19 @@
-import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useQueries, useQuery } from "@tanstack/react-query";
 import http from "./api";
 
+// infinite scrolling 
+
+export function useFetchCelebsQuery(){
+  return useInfiniteQuery({
+    queryKey : ["celebs"], 
+    queryFn : http.getCelebs,
+    getNextPageParam : (lastPage,  pages) => {
+      console.log(lastPage, pages)
+      if(lastPage.length  === 0)return undefined;
+      return pages.length + 1;
+    }
+  })
+}
 
 // get awards query
 
